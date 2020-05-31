@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 function toggleTheme() {
-	$.post("theme")
+	$.post("/theme")
 		.done(function() {
 			location.reload();
 		});

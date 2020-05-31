@@ -1,0 +1,12 @@
+﻿@using RiotPls.DataDragon.Entities
+@{
+    var champions = (IReadOnlyList<Champion>)ViewData["champions"];
+    var lang = ViewData["language_code"];
+}
+
+<div class="row">
+@foreach (var champion in champions.OrderBy(x => x.Name))
+{
+    <div class="col-lg-1 mb-4"><a href="/champion/@lang/@champion.Id"><img class="img-fluid" src="@champion.GetTileUrl()" alt="@champion.Name"/></a></div>
+}    
+</div>

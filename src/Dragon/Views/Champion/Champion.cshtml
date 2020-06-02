@@ -1,7 +1,8 @@
 ﻿@using RiotPls.DataDragon.Entities
-@using RiotPls.DataDragon.Enums
 @{
     var champion = (Champion) ViewData["champion"];
+    var skins = (Dictionary<int, string>) ViewData["skins"];
+    var spells = (string[]) ViewData["spells"];
 }
 
 <h2>@champion.Name</h2>
@@ -9,17 +10,16 @@
     <div class="col-sm">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
-                @for (var i = 0; i < champion.Skins.Count; i++)
+                @for (var i = 0; i < skins.Count; i++)
                 {
                     <li data-target="#carousel" data-slide-to="@i" @(i == 0 ? "class=\"active\"" : "")></li>
                 }
             </ol>
             <div class="carousel-inner">
-                @for (var i = 0; i < champion.Skins.Count; i++)
+                @foreach (var (skinId, skinPath) in skins)
                 {
-                    var skin = champion.Skins[i];
-                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                        <img class="d-block w-100" src="@skin.GetSplashArtUrl(true)" alt="@skin.Name">
+                    <div class="carousel-item @(skinId == 0 ? "active" : "")">
+                        <img class="d-block w-100" src="@skinPath" alt="@skinId">
                     </div>
                 }
             </div>
@@ -50,20 +50,20 @@
         <div class="row h-100 justify-content-center">
             <div class="col-lg-4">
                 <p>
-                    <img class="img-fluid" src="@champion.GetAbilityIconUrl(ChampionAbility.Passive)" alt="Passive spell"/> @champion.PassiveSpell.Name
+                    <img class="img-fluid" src="@spells[0]" alt="Passive spell"/> @champion.PassiveSpell.Name
                 </p>
                 <p>
                     @champion.PassiveSpell.RawDescription
                 </p>
             </div>
 
-            @for (var i = 0; i < champion.Spells.Count; ++i)
+            @for (var i = 1; i < champion.Spells.Count; ++i)
             {
                 var spell = champion.Spells[i];
 
                 <div class="col-sm col-lg-4">
                     <p>
-                        <img class="img-fluid" src="@champion.GetAbilityIconUrl((ChampionAbility) i + 1)" alt="@spell.Id"/> @spell.Name
+                        <img class="img-fluid" src="@spells[i]" alt="@spell.Id"/> @spell.Name
                     </p>
                     <p class="text-justify">
                         @spell.RawDescription
@@ -81,31 +81,34 @@
 
 <br/>
 
-<div class="card">
-    <div class="card-header bg-secondary">
-        <h2>Tips</h2>
-    </div>
-    <div class="card-body">
-        <div class="row h-100 justify-content-center">
-            <div class="col-sm col-lg-6">
-                <h2 class="text-center">Ally Tips</h2>
-                @foreach (var tips in champion.AllyTips)
-                {
-                    <p class="text-justify">
-                        @tips
-                    </p>
-                }
-            </div>
+@if (champion.EnemyTips.Count > 0 && champion.AllyTips.Count > 0)
+{
+    <div class="card">
+        <div class="card-header bg-secondary">
+            <h2>Tips</h2>
+        </div>
+        <div class="card-body">
+            <div class="row h-100 justify-content-center">
+                <div class="col-sm col-lg-6">
+                    <h2 class="text-center">Ally Tips</h2>
+                    @foreach (var tips in champion.AllyTips)
+                    {
+                        <p class="text-justify">
+                            @tips
+                        </p>
+                    }
+                </div>
 
-            <div class="col-sm col-lg-6">
-                <h2 class="text-center">Ennemy Tips</h2>
-                @foreach (var tips in champion.AllyTips)
-                {
-                    <p class="text-justify">
-                        @tips
-                    </p>
-                }
+                <div class="col-sm col-lg-6">
+                    <h2 class="text-center">Enemy Tips</h2>
+                    @foreach (var tips in champion.EnemyTips)
+                    {
+                        <p class="text-justify">
+                            @tips
+                        </p>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
+}

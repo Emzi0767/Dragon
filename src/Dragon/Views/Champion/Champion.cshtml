@@ -57,13 +57,13 @@
                 </p>
             </div>
 
-            @for (var i = 1; i < champion.Spells.Count; ++i)
+            @for (var i = 0; i < champion.Spells.Count; ++i)
             {
                 var spell = champion.Spells[i];
 
                 <div class="col-sm col-lg-4">
                     <p>
-                        <img class="img-fluid" src="@spells[i]" alt="@spell.Id"/> @spell.Name
+                        <img class="img-fluid" src="@spells[i + 1]" alt="@spell.Id"/> @spell.Name
                     </p>
                     <p class="text-justify">
                         @spell.RawDescription
